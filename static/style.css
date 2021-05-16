@@ -1,18 +1,13 @@
-/*
- * Paper
- * A simple, clean, flexible Hugo theme
- * https://github.com/nanxiaobei/hugo-paper
- * Designed by MR.LEE (https://mrlee.me/)
- * Updated in 2020.6.12
- */
+@font-face {
+  font-family: VMono;
+  src: url(VictorMono/VictorMono-Regular.woff);
+}
 
 /* Theme
 -------------------------------------------------- */
 :root {
   --gap: 24px;
   --content-gap: 40px;
-  --nav-width: 1024px;
-  --main-width: 640px;
   --header-height: 60px;
   --footer-height: 60px;
   --radius: 8px;
@@ -77,6 +72,19 @@ main,
 nav,
 section {
   display: block;
+}
+article,
+header,
+.post-single-content,
+footer {
+  text-align: left;
+  max-width: 1024px;
+  margin: auto;
+}
+.post-single,
+main {
+  width: 100%;
+  max-width: 100%;
 }
 h1,
 h2,
@@ -144,31 +152,33 @@ img {
 /* Header
 -------------------------------------------------- */
 .nav {
-  display: flex;
+  display: block;
   flex-wrap: wrap;
   justify-content: space-between;
   max-width: calc(var(--nav-width) + var(--gap) * 2);
   margin-left: auto;
   margin-right: auto;
 }
-.nav a {
-  display: block;
+.nav a, .nav p, .nav h1, .nav h4 {
   line-height: var(--header-height);
 }
 .logo,
-.menu {
+.menu-item,
+.dark-mode-toggle {
+  display: inline-block;
   margin-left: var(--gap);
-  margin-right: var(--gap);
 }
 .logo a {
   font-size: 24px;
   font-weight: 700;
 }
+.logo,
 .menu {
-  display: flex;
+  display: inline-block;
   list-style: none;
   word-break: keep-all;
   overflow-x: auto;
+  margin-right: var(--gap);
 }
 .menu li + li {
   margin-left: var(--gap);
@@ -176,6 +186,20 @@ img {
 .menu a {
   font-size: 16px;
 }
+.dark-mode-toggle {
+  float: right;
+  margin-right: var(--gap);
+}
+.bright-text {
+  display: none;
+}
+.dark .dark-text {
+  display: none;
+}
+.dark .bright-text {
+  display: inherit;
+}
+
 /* Main
 -------------------------------------------------- */
 .main {
@@ -185,6 +209,7 @@ img {
   margin-left: auto;
   margin-right: auto;
   padding: var(--gap);
+  padding-top: 0;
 }
 .page-header {
   margin-bottom: 24px;
@@ -213,31 +238,9 @@ img {
 }
 /* Post entry
 -------------------------------------------------- */
-.first-entry {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  height: 320px;
-  margin-bottom: var(--header-height);
-}
-.first-entry .entry-header {
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
-}
-.first-entry .entry-header h2 {
-  font-size: 40px;
-}
-.first-entry .entry-content {
-  margin-top: 14px;
-  margin-bottom: 14px;
-  font-size: 16px;
-  -webkit-line-clamp: 3;
-}
-.first-entry .entry-footer {
-  font-size: 14px;
+.post-thumbnail-img {
+  margin:auto;
+  max-height: 750px;
 }
 .post-entry {
   position: relative;
@@ -254,12 +257,17 @@ img {
 .tag-entry .entry-footer {
   display: none;
 }
+.entry-header {
+  margin: 0;
+}
 .entry-header h2 {
   font-size: 24px;
 }
+.entry-subtitle {
+  padding: 10px 0;
+}
 .entry-content {
-  margin-top: 8px;
-  margin-bottom: 8px;
+  margin: 8px 0;
   color: var(--secondary);
   font-size: 14px;
   line-height: 1.6;
@@ -269,6 +277,7 @@ img {
   -webkit-line-clamp: 2;
 }
 .entry-footer {
+  margin: 0;
   color: var(--secondary);
   font-size: 13px;
 }
@@ -286,9 +295,12 @@ img {
   margin-bottom: var(--content-gap);
 }
 .post-title {
-  margin-bottom: 2px;
+  margin-top: 30px;
   font-size: 40px;
   transform: translateX(-2px);
+}
+.post-subtitle {
+ margin: 20px 0;
 }
 .post-meta {
   color: var(--secondary);
@@ -408,10 +420,12 @@ img {
   margin-left: calc(var(--gap) * -2);
 }
 .post-content .highlight pre {
-  margin-left: 0;
-  margin-right: 0;
-  margin-bottom: 0;
+  margin: 0;
 }
+.post-content .highlight pre .custom-language {
+  margin: -30px 0 0 -20px;
+}
+
 /* table */
 .post-content .highlighttable {
   table-layout: fixed;
@@ -438,7 +452,7 @@ img {
   margin-left: 4px;
   margin-right: 4px;
   padding: 4px 6px;
-  font-family: Menlo, Monaco, 'Courier New', Courier, monospace;
+  font-family: VMono, Menlo, Monaco, 'Courier New', Courier, monospace;
   font-size: 0.78em;
   line-height: 1.5;
   background: var(--code-bg);
@@ -526,4 +540,10 @@ img {
   height: 80%;
   font-size: 160px;
   font-weight: 700;
+}
+
+.highlight pre code,
+.highlight pre .custom-language {
+  font-family: VMono, Menlo, Monaco, 'Courier New', Courier, monospace;
+  font-size: 15px;
 }

@@ -18,65 +18,40 @@
     <link href="{{ "an-old-hope.min.css" | absURL }}" rel="stylesheet">
     <link href="{{ "style.css" | absURL }}" rel="stylesheet">
     <link href="{{ "custom.css" | absURL }}" rel="stylesheet">
-    <!-- Favicons -->
-    <link rel="apple-touch-icon" href="{{ "apple-touch-icon.png" | absURL }}">
-    <link rel="icon" href="{{ "favicon.ico" | absURL }}">
+    <!-- Favicon -->
+    {{ if .Site.Params.favicon }}
+    <link rel="icon" href="{{ .Site.Params.favicon | absURL }}" />
+    {{ end }}
     <!-- Generator -->
     {{- hugo.Generator }}
     <!-- RSS -->
     {{ range .AlternativeOutputFormats -}}
     {{ printf `<link rel="%s" type="%s" href="%s" title="%s" />` .Rel .MediaType.Type .Permalink $.Site.Title | safeHTML }}
     {{ end -}}
-    <!-- Misc -->
-    {{- if eq (getenv "HUGO_ENV") "production" | or (eq .Site.Params.env "production") }}
-    {{- template "_internal/google_analytics_async.html" . }}
-    {{- template "_internal/opengraph.html" . }}
-    {{- end }}
     <!-- Script -->
     <script>
+      const key = 'dark-theme';
+      const dark = 'dark';
+      const light = 'light';
+
       function setTheme() {
-        if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-          document.body.classList.add('dark');
-          return;
+        if (localStorage.getItem(key)) {
+          if (localStorage.getItem(key) === dark) {
+            document.body.classList.add(dark);
+          }
+        } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+          document.body.classList.add(dark);
         }
+      }
 
-        const time = new Date();
-        const prev = localStorage.getItem('date');
-        const date = String(time.getMonth() + 1) + '.' + String(time.getDate());
-
-        const now = time.getTime();
-        let sunrise;
-        let sunset;
-
-        function setBodyClass() {
-          if (now > sunrise && now < sunset) return;
-          document.body.classList.add('dark');
+      function toggleDarkMode() {
+        const current = localStorage.getItem(key);
+        var newVal = dark;
+        if (current === newVal) {
+          newVal = light;
         }
-
-        if (date !== prev) {
-          fetch('https://api.ipgeolocation.io/astronomy?apiKey=5ed37d85103e4defa5df4c5298ed5215')
-            .then((res) => res.json())
-            .then((data) => {
-              sunrise = data.sunrise.split(':').map(Number);
-              sunset = data.sunset.split(':').map(Number);
-            })
-            .catch(() => {
-              sunrise = [7, 0];
-              sunset = [19, 0];
-            })
-            .finally(() => {
-              sunrise = time.setHours(sunrise[0], sunrise[1], 0);
-              sunset = time.setHours(sunset[0], sunset[1], 0);
-              setBodyClass();
-              localStorage.setItem('sunrise', sunrise);
-              localStorage.setItem('sunset', sunset);
-            });
-          localStorage.setItem('date', date);
-        } else {
-          sunrise = Number(localStorage.getItem('sunrise'));
-          sunset = Number(localStorage.getItem('sunset'));
-          setBodyClass();
-        }
+        localStorage.setItem(key, newVal);
+        document.body.classList.toggle(dark);
       }
     </script>
   </head>
@@ -86,20 +61,20 @@
     </script>
     <header class="header">
       <nav class="nav">
-        {{- if .IsHome }}
         <h1 class="logo"><a href="{{ "" | absURL }}">{{ .Site.Title }}</a></h1>
-        {{- else }}
-        <p class="logo"><a href="{{ "" | absURL }}">{{ .Site.Title }}</a></p>
-        {{- end }}
         {{- if .Site.Menus.main }}
         <ul class="menu">
           {{- range .Site.Menus.main }}
-          <li>
+          <li class="menu-item">
             <a href="{{ .URL }}">{{ .Name }}</a>
           </li>
           {{- end }}
         </ul>
         {{- end }}
+        <button class="dark-mode-toggle" onclick="toggleDarkMode()">
+          <h4 class="bright-text">Bright</h2>
+          <h4 class="dark-text">Dark</h2>
+        </button>
       </nav>
     </header>
     <main class="main">
