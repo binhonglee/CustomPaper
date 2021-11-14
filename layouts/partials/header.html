@@ -14,8 +14,13 @@
     <meta property="og:type" content="article">
     <meta property="og:title" content="{{ .Title }}">
     <meta property="og:site_name" content="{{ .Site.Title }}">
+    {{- if .Params.subtitle }}
+    <meta property="og:description" content="{{ .Params.subtitle }}">
+    <meta name="twitter:description" content="{{ .Params.subtitle }}">
+    {{- else }}
     <meta property="og:description" content="{{ .Summary }}">
     <meta name="twitter:description" content="{{ .Summary }}">
+    {{- end }}
     <meta name="twitter:title" content="{{ .Title }}">
     {{- $iso8601 := "2006-01-02T15:04:05Z07:00" -}}
     <meta property="article:published_time" {{ .Date.Format $iso8601 | safeHTMLAttr }} />
